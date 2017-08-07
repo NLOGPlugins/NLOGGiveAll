@@ -22,13 +22,17 @@ class Main extends PluginBase implements Listener{
  	 	if ($cmd->getName() === "giveall") {}
  	 		if(!(count($args) === 1 or count($args) === 2)) {
  	 			$sender->sendMessage("§o§b[ 알림 ] §7/giveall <아이템 코드> [아이템 수량]");
- 	 			return;
+ 	 			return true;
  	 		}
 			if (!(isset ($args[1]))) {
 				$args[1] = 1;
 			}
 			
 			if ($args[0] === "hand") {
+				if (!$sender instanceof Player) {
+					$sender->sendMessage("§o§b[ 알림 ] §7콘솔에서는 사용하실 수 없습니다.");
+					return true;
+				}
 				$item = $this->getServer()->getPlayerExact($sender->getName())->getInventory()->getItemInHand();
 			}else{
  	 			$item = Item::fromString($args[0]);
@@ -39,12 +43,12 @@ class Main extends PluginBase implements Listener{
 			
 			if ($item->getId() === 0) {
 				$sender->sendMessage("§o§b[ 알림 ] §7알 수 없는 아이템입니다.");
-				return;
+				return true;
 			}
  	 		
 			if ($args[1] <= 0 or $args[1] > 64) {
  	 			$sender->sendMessage("§o§b[ 알림 ] §7개수는 1개 이상 64개 이하로 입력해주세요.");
-				return;
+				return true;
 			}
 			
  	 		foreach ($this->getServer()->getOnlinePlayers() as $player) {
